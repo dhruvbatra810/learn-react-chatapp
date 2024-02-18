@@ -41,7 +41,6 @@ const Signup = () => {
     }
     try {
       const config = { headers: { "Content-type": "application/json" } };
-      console.log("coming here ? ");
       const { data } = await axios.post(
         "/users/register",
         { name, email, password, pic },
@@ -56,7 +55,7 @@ const Signup = () => {
       });
       localStorage.setItem("userInfo", JSON.stringify(data));
       setloading(false);
-      navigate("/chats");
+      navigate("/chat");
     } catch (error) {
       console.log("sinup catch");
       toast({

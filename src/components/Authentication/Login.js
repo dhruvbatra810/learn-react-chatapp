@@ -2,32 +2,35 @@ import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { VStack } from "@chakra-ui/layout";
-import { useToast } from "@chakra-ui/react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useToast } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import { ChatState } from "../../Context/chatContext";
 
 const Login = () => {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
+  const toast = useToast();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const [loading, setloading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const toast = useToast();
   const navigate = useNavigate();
+  const { setUser } = ChatState();
 
   const submitHandler = async () => {
-    setloading(true);
+    setLoading(true);
     if (!email || !password) {
       toast({
-        title: "Please fill all fields!",
+        title: "Please Fill all the Feilds",
         status: "warning",
         duration: 5000,
         isClosable: true,
         position: "bottom",
       });
-      setloading(false);
+      setLoading(false);
+      return;
     }
 
     try {
@@ -36,6 +39,7 @@ const Login = () => {
           "Content-type": "application/json",
         },
       };
+
       const { data } = await axios.post(
         "/users/login",
         { email, password },
@@ -43,25 +47,26 @@ const Login = () => {
       );
 
       toast({
-        title: "login successful",
+        title: "Login Successful",
         status: "success",
         duration: 5000,
         isClosable: true,
         position: "bottom",
       });
+      setUser(data);
       localStorage.setItem("userInfo", JSON.stringify(data));
-      setloading(false);
-      navigate("/chats");
+      setLoading(false);
+      navigate("/chat");
     } catch (error) {
       toast({
-        title: "Error Occured",
+        title: "Error Occured!",
         description: error.response.data.message,
         status: "error",
         duration: 5000,
         isClosable: true,
         position: "bottom",
       });
-      setloading(false);
+      setLoading(false);
     }
   };
 
@@ -70,9 +75,9 @@ const Login = () => {
       <FormControl id="email" isRequired>
         <FormLabel>Email Address</FormLabel>
         <Input
+          value={email}
           type="email"
           placeholder="Enter Your Email Address"
-          value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
       </FormControl>
@@ -80,8 +85,8 @@ const Login = () => {
         <FormLabel>Password</FormLabel>
         <InputGroup size="md">
           <Input
-            onChange={(e) => setPassword(e.target.value)}
             value={password}
+            onChange={(e) => setPassword(e.target.value)}
             type={show ? "text" : "password"}
             placeholder="Enter password"
           />
@@ -97,6 +102,7 @@ const Login = () => {
         width="100%"
         style={{ marginTop: 15 }}
         onClick={submitHandler}
+        isLoading={loading}
       >
         Login
       </Button>

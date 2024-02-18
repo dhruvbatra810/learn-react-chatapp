@@ -9,11 +9,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 import Login from "../components/Authentication/Login";
-import Signup from "../components/Authentication/Singup";
+import Signup from "../components/Authentication/Signup";
 
 function Home() {
-
-
   return (
     <Container maxW="xl" centerContent>
       <Box
@@ -49,4 +47,4 @@ function Home() {
   );
 }
 
-export default Home
+export default Home;
