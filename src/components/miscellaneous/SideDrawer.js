@@ -68,7 +68,6 @@ function SideDrawer() {
 
     try {
       setLoading(true);
-
       const config = {
         headers: {
           Authorization: `Bearer ${user.token}`,

@@ -15,8 +15,8 @@ import animationData from "../animations/typing.json";
 import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { ChatState } from "../Context/chatContext";
-const ENDPOINT = "http://localhost:5000"; // "https://talk-a-tive.herokuapp.com"; -> After deployment
-var socket, selectedChatCompare;
+const ENDPOINT = "http://localhost:8080"; // "https://talk-a-tive.herokuapp.com"; -> After deployment
+let socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
@@ -50,11 +50,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
       setLoading(true);
 
-      const { data } = await axios.get(
-        `/api/message/${selectedChat._id}`,
-        config
-      );
+      const { data } = await axios.get(`/messages/${selectedChat._id}`, config);
+      console.log(54, "messageData", data);
       setMessages(data);
+      console.log(56, messages);
       setLoading(false);
 
       socket.emit("join chat", selectedChat._id);
@@ -72,6 +71,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const sendMessage = async (event) => {
     if (event.key === "Enter" && newMessage) {
+      console.log(72, selectedChat);
       socket.emit("stop typing", selectedChat._id);
       try {
         const config = {
@@ -82,13 +82,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         };
         setNewMessage("");
         const { data } = await axios.post(
-          "/api/message",
+          "/messages",
           {
             content: newMessage,
             chatId: selectedChat,
           },
           config
         );
+        console.log(90, "new message", data);
         socket.emit("new message", data);
         setMessages([...messages, data]);
       } catch (error) {
@@ -110,7 +111,23 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("connected", () => setSocketConnected(true));
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));
-
+    socket.on("message recieved", (newMessageRecieved) => {
+      console.log(124, newMessageRecieved);
+      if (
+        !selectedChatCompare || // if chat is not selected or doesn't match current chat
+        selectedChatCompare._id !== newMessageRecieved.chat._id
+      ) {
+        console.log(128);
+        if (!notification.includes(newMessageRecieved)) {
+          setNotification([newMessageRecieved, ...notification]);
+          setFetchAgain(!fetchAgain);
+        }
+      } else {
+        console.log(134, "messages", messages);
+        console.log("newMessageRecieved", newMessageRecieved);
+        setMessages((message) => [...message, newMessageRecieved]); // state not setting up // error
+      }
+    });
     // eslint-disable-next-line
   }, []);
 
@@ -121,28 +138,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     // eslint-disable-next-line
   }, [selectedChat]);
 
-  useEffect(() => {
-    socket.on("message recieved", (newMessageRecieved) => {
-      if (
-        !selectedChatCompare || // if chat is not selected or doesn't match current chat
-        selectedChatCompare._id !== newMessageRecieved.chat._id
-      ) {
-        if (!notification.includes(newMessageRecieved)) {
-          setNotification([newMessageRecieved, ...notification]);
-          setFetchAgain(!fetchAgain);
-        }
-      } else {
-        setMessages([...messages, newMessageRecieved]);
-      }
-    });
-  });
+  // useEffect(() => {
+
+  // });
 
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
-
+    console.log("139");
     if (!socketConnected) return;
 
     if (!typing) {
+      console.log(143);
       setTyping(true);
       socket.emit("typing", selectedChat._id);
     }
@@ -203,7 +209,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             p={3}
             bg="#E8E8E8"
             w="100%"
-            h="100%"
+            h="90%"
             borderRadius="lg"
             overflowY="hidden"
           >
@@ -227,6 +233,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               isRequired
               mt={3}
             >
+              {console.log(228, istyping)}
               {istyping ? (
                 <div>
                   <Lottie
@@ -251,7 +258,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         </>
       ) : (
         // to get socket.io on same page
-        <Box display="flex" alignItems="center" justifyContent="center" h="100%">
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          h="100%"
+        >
           <Text fontSize="3xl" pb={3} fontFamily="Work sans">
             Click on a user to start chatting
           </Text>
