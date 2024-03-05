@@ -14,7 +14,7 @@ import {
   Image,
 } from "@chakra-ui/react";
 
-const ProfileModal = ({ user, children }) => {
+function ProfileModal({ user, children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -66,6 +66,6 @@ const ProfileModal = ({ user, children }) => {
       </Modal>
     </>
   );
-};
+}
 
 export default ProfileModal;

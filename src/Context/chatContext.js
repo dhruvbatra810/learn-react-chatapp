@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const ChatContext = createContext();
 
-const ChatProvider = ({ children }) => {
+function ChatProvider({ children }) {
   const [selectedChat, setSelectedChat] = useState();
   const [user, setUser] = useState();
   const [notification, setNotification] = useState([]);
@@ -35,10 +35,8 @@ const ChatProvider = ({ children }) => {
       {children}
     </ChatContext.Provider>
   );
-};
+}
 
-export const ChatState = () => {
-  return useContext(ChatContext);
-};
+export const ChatState = () => useContext(ChatContext);
 
 export default ChatProvider;
