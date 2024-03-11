@@ -1,3 +1,7 @@
+# About
+
+Crafting a full-stack application, the frontend built on React.js with Chakra UI seamlessly blends with a Node.js backend, leveraging Socket.io and MongoDB for dynamic functionality.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
