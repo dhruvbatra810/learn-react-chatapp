@@ -1,24 +1,54 @@
 {
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true,
+    "jest": true
+  },
   "extends": [
     "airbnb",
-    "prettier",
+    "plugin:prettier/recommended",
     "plugin:react/recommended",
-    "plugin:react-hooks/recommended"
+    "plugin:react-hooks/recommended",
+    "prettier/react"
   ],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
   "plugins": ["prettier", "react", "react-hooks"],
   "rules": {
+    "semi": 0,
+    "quotes": ["error", "single"],
+    "no-console": [
+      "error",
+      {
+        "allow": ["error"]
+      }
+    ],
+    "react/prop-types": 0,
+    "react/destructuring-assignment": 0,
+    "react/jsx-filename-extension": 0,
+    "react/jsx-props-no-spreading": 0,
+    "import/prefer-default-export": 0,
     "prettier/prettier": "error",
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "react/jsx-props-no-spreading": "off",
-    "react/react-in-jsx-scope": "off",
-    "react/jsx-no-useless-fragment": "off",
-    "no-underscore-dangle": "off",
-    "import/no-extraneous-dependencies": "off",
-    "import/no-named-as-default-member": "off",
-    "import/no-named-as-default": "off",
-    "react/prop-types": "off"
+    "react/no-array-index-key": "off",
+    "no-use-before-define": [
+      "error",
+      {
+        "functions": false
+      }
+    ],
+    "no-plusplus": [
+      "error",
+      {
+        "allowForLoopAfterthoughts": true
+      }
+    ],
+    "no-restricted-syntax": 0
   },
   "parserOptions": {
-    "sourceType": "module"
-  }
+    "ecmaVersion": 2021
+  },
+  "parser": "babel-eslint"
 }
