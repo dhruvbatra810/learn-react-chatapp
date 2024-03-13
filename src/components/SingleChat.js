@@ -16,7 +16,7 @@ import { getSender, getSenderFull } from "../config/ChatLogics";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { ChatState } from "../Context/chatContext";
 
-const ENDPOINT = "http://localhost:8080"; // "https://talk-a-tive.herokuapp.com"; -> After deployment
+const ENDPOINT = "https://node-chatapp-1-0-2.onrender.com/"; // "https://talk-a-tive.herokuapp.com"; -> After deployment
 let socket;
 let selectedChatCompare;
 

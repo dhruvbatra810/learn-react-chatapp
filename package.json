@@ -2,7 +2,7 @@
   "name": "chatapp",
   "version": "0.1.0",
   "private": false,
-  "proxy": "http://127.0.0.1:8080",
+  "proxy": "https://node-chatapp-1-0-2.onrender.com/",
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.2",
